@@ -5,30 +5,32 @@ const { app, BrowserWindow } = require('electron')
 let win
 
 function createWindow () {
-  // 创建浏览器窗口。
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    backgroundColor: "#f4f4f4",
+    show:            false,
+    opacity:         1.0,
+    center:          true,
+    minHeight:       480,
+    height:          480,
+    maxWidth:        850,
+    minWidth:        850,
+    width:           850,
+    fullscreenable:  false,
+    titleBarStyle:   "hiddenInset",
     webPreferences: {
       nodeIntegration: true
     },
-    BackgroundColor: "#f5f5f5",
-      opacity:         1.0,
-      Center:          true,
-      MinHeight:       440,
-      Height:          440,
-      MaxWidth:        850,
-      MinWidth:        850,
-      Width:           850,
-      Fullscreenable:  false,
-      titleBarStyle:   "hiddenInset",
   })
 
   // 加载index.html文件
   win.loadFile('app/index.html')
 
   // 打开开发者工具
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
+
+  win.once('ready-to-show', () => {
+    win.show()
+  })
 
   // 当 window 被关闭，这个事件会被触发。
   win.on('closed', () => {
@@ -37,12 +39,15 @@ function createWindow () {
     // 与此同时，你应该删除相应的元素。
     win = null
   })
+
 }
 
 // Electron 会在初始化后并准备
 // 创建浏览器窗口时，调用这个函数。
 // 部分 API 在 ready 事件触发后才能使用。
 app.on('ready', createWindow)
+
+
 
 // 当全部窗口关闭时退出。
 app.on('window-all-closed', () => {

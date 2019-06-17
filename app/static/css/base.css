@@ -7,6 +7,10 @@ input {
     -webkit-app-region: no-drag;
 }
 
+input {
+    cursor: text!important;
+}
+
 .layer {
     position: relative;
     /* top: 56px;

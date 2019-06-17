@@ -1,0 +1,88 @@
+body {
+    user-select: none;
+}
+
+button,
+input {
+    -webkit-app-region: no-drag;
+}
+
+.layer {
+    position: relative;
+    /* top: 56px;
+    height: calc(100% - 56px); */
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.layer::-webkit-scrollbar {
+    -webkit-app-region: no-drag;
+}
+
+.mdui-panel-item {
+    background: #fbfbfb !important;
+}
+
+/* .layer::-webkit-scrollbar {
+    width:5px!important;
+    height:5px!important;
+    background-color: rgb(241, 241, 241)!important;
+}
+.layer::-webkit-scrollbar-track{
+    background: rgb(241, 241, 241);
+    border-radius:2px;
+}
+滚动条里面可以拖动的那部分
+.layer::-webkit-scrollbar-thumb{
+    background: rgba(0, 0, 0, 0.2);
+    border-radius:2px;
+}
+.layer::-webkit-scrollbar-thumb:hover{
+    background: rgba(0, 0, 0, 0.4);
+} */
+
+.mc-empty {
+    background-image: url(data:image/png;base64,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);
+    background-repeat: no-repeat;
+    background-position: top;
+    width: 100%;
+    text-align: center;
+    padding: 108px 16px 64px;
+    margin-top: 80px;
+    box-sizing: border-box
+}
+
+.mc-empty .title {
+    font-size: 18px
+}
+
+.mc-empty .description,
+.mc-empty .title {
+    color: rgba(0, 0, 0, .54);
+    margin-bottom: 20px
+}
+
+.mc-empty .description {
+    font-size: 15px;
+    line-height: 24px
+}
+
+.header-box {
+    position: fixed;
+    width: 36px;
+    height: 36px;
+    margin: 10px;
+    top: 0;
+    right: 8px;
+    z-index: 10000;
+    cursor: pointer
+}
+
+.header-avatar {
+    float: left;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    /* background-color: #b9b9b9; */
+}

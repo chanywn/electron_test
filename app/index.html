@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>DEV</title>
+    <link rel="stylesheet" href="static/lib/mdui/css/mdui.min.css">
+    <link rel="stylesheet" href="static/css/base.css">
+</head>
+
+<body class="mdui-bottom-nav-fixed1 mdui-theme-primary-indigo mdui-theme-accent-blue"
+    style="background: #f1f1f1;overflow: hidden;">
+    <div style="position: fixed;top:0;width:100%;height:56px;-webkit-app-region: drag;"></div>
+
+    <div id="bar_panal" class="mdui-bottom-nav mdui-bottom-nav-text-auto mdui-color-theme mdui-tab1"
+        mdui-tab style="z-index: 9999;">
+
+        <a href="#download_layer" class="mdui-ripple mdui-ripple-white  mdui-bottom-nav-active">
+            <i class="mdui-icon material-icons">file_download</i>
+            <label>正在下载</label>
+        </a>
+        <a href="#finish_layer" class="mdui-ripple mdui-ripple-white">
+            <i class="mdui-icon material-icons">insert_emoticon</i>
+            <label>已完成</label>
+        </a>
+        <a href="#setting_layer" class="mdui-ripple mdui-ripple-white">
+            <i class="mdui-icon material-icons">settings</i>
+            <label>设置</label>
+        </a>
+        
+    </div>
+    <div class="header-box">
+        <img class="header-avatar" src="static/ddd_avatar.jpg" alt="">
+    </div>
+
+    <div class="">
+        <div id="download_layer" class="">
+            <div class="mdui-btn-group" style="margin-bottom: 10px;margin-bottom: 10px;width: 100%;background-color: #fdfdfd;border-bottom: 1px solid #eee;padding: 0 30px;">
+                <button id="btn_add" mdui-tooltip="{content: '新建下载任务'}" type="button" class="mdui-btn"><i
+                        class="mdui-icon material-icons">add_circle_outline</i></button>
+                <button type="button" mdui-tooltip="{content: '开始'}" class="mdui-btn"><i
+                        class="mdui-icon material-icons">play_arrow</i></button>
+                <button type="button" mdui-tooltip="{content: '暂停'}" class="mdui-btn"><i
+                        class="mdui-icon material-icons">pause</i></button>
+                <button type="button" mdui-tooltip="{content: '删除'}" class="mdui-btn"><i
+                        class="mdui-icon material-icons">delete</i></button>
+                <button type="button" mdui-tooltip="{content: ' 帮助'}" class="mdui-btn"><i
+                        class="mdui-icon material-icons">help</i></button>
+            </div>
+            <div class="layer">
+                <div id="v-downloads" class="mdui-panel" mdui-panel>
+                    <div id="download-mc-empty" class="mc-empty">
+                        <div class="title">没有任何下载任务</div>
+                        <div class="description">新建下载任务后，相应的下载任务就会显示在此处。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="finish_layer" class="">
+            <div class="layer">
+                <div id="v-downloads" class="mdui-panel" mdui-panel>
+                    <div id="finish-mc-empty" class="mc-empty">
+                        <div class="title">没有任何下载任务</div>
+                        <div class="description">新建下载任务后，相应的下载任务就会显示在此处。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="setting_layer" class="">
+            <div class="layer">
+                <ul class="mdui-list">
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">message</i>
+                        <div class="mdui-list-item-content">打开消息通知</div>
+                        <label class="mdui-switch">
+                            <input type="checkbox" checked />
+                            <i class="mdui-switch-icon"></i>
+                        </label>
+                    </li>
+    
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">cloud_download</i>
+                        <div class="mdui-list-item-content">设置下载目录 <span style="color:#999;font-size:0.9em;">/Users/chenhao/project/go-astilectron-demo</span></div>
+                        
+                    </li>
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">layers</i>
+                        <div class="mdui-list-item-content">主题颜色</div>
+                    </li>
+    
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">data_usage</i>
+                        <div class="mdui-list-item-content">使用说明</div>
+                    </li>
+    
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="mdui-dialog" id="new_task_dialog" style="width: 450px;">
+        <div class="mdui-dialog-content" style="height: 116px;">
+            <div class="mdui-textfield">
+                <label class="mdui-textfield-label">请输入网页视频播放页连接</label>
+                <input id="input_url" class="mdui-textfield-input" type="text">
+            </div>
+            <div class="">
+                <label class="mdui-checkbox">
+                    <input id="input_auto" type="checkbox" />
+                    <i class="mdui-checkbox-icon"></i>
+                    手动选择视频流
+                </label>
+            </div>
+        </div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
+            <button id="btn_create_task" class="mdui-btn mdui-ripple" mdui-dialog-confirm>创建</button>
+        </div>
+    </div>
+
+    <div class="mdui-dialog" id="select_steam_dialog" style="width: 450px;top:110px;min-height: 250px">
+        <div class="mdui-dialog-content" style="min-height: 250px">
+            <div id="v-streams" class="mdui-list">
+            </div>
+        </div>
+    </div>
+
+    <script src="static/lib/mdui/js/mdui.min.js"></script>
+    <script src="static/js/app.js"></script>
+    <script>
+        app.init();
+        var $$ = mdui.JQ;
+        var t, opacity;
+        var isFocus = false;
+
+        var newTaskDialog = new mdui.Dialog("#new_task_dialog", {
+            "overlay": false,
+            "modal": true
+        });
+
+        var selectSteamDialog = new mdui.Dialog("#select_steam_dialog", {
+            "overlay": false,
+            "modal": true
+        });
+
+        $$('#btn_add').on('click', function () {
+            $$("#input_url").val('');
+
+            newTaskDialog.open();
+        })
+
+        $$("#btn_create_task").on('click', function () {
+            var inputUrl = $$("#input_url").val();
+            var inputAuto = $$("#input_auto").prop('checked');
+            console.log(inputUrl);
+            console.log(inputAuto);
+            
+            var html = "";
+            $$('#v-streams').html(html)
+
+            if (true) {
+                app.search(inputUrl, function (response) {
+                    var title = response.payload[0].title;
+                    console.log(title);
+                    $$('#v-title').text(title)
+                    var streams = response.payload[0].streams;
+                    if (inputAuto) {
+                        selectSteamDialog.open();
+                        Object.keys(streams).forEach(function (key) {
+                            var q = streams[key]['quality'];
+                            var s = streams[key]['size'];
+                            // var e = streams[key]['urls'][0]['ext'];
+                            html += `<label class="mdui-list-item mdui-ripple">
+                                <div class="mdui-radio btn-download"  data-key="${key}" title="${title}">
+                                    <input type="radio" name="stream" />
+                                    <i class="mdui-radio-icon"></i>
+                                </div>
+                                <i class="mdui-list-item-icon mdui-icon material-icons">ondemand_video</i>
+                                <div class="mdui-list-item-content"><b>${q}</b> (<span>${s} bit</span>)</div>
+                            </label>`
+                        });
+                        $$('#v-streams').html(html)
+                    } else {
+                        var keys = Object.keys(streams);
+                        console.log(keys);
+                        var key = keys.max()
+                        console.log(key);
+
+                        var q = streams[key]['quality'];
+                        var s = streams[key]['size'];
+                        html += `<label class="mdui-list-item mdui-ripple">
+                            <div class="mdui-radio btn-download"  data-key="${key}" title="${title}">
+                                <input type="radio" name="stream" />
+                                <i class="mdui-radio-icon"></i>
+                            </div>
+                            <i class="mdui-list-item-icon mdui-icon material-icons">ondemand_video</i>
+                            <div class="mdui-list-item-content"><b>${q}</b> (<span>${s} bit</span>)</div>
+                        </label>`
+                        $$('#v-streams').html(html)
+                        app.Addtask(inputUrl, key, title);
+                    }
+                })
+            } else {
+                var payload = `{"site":"哔哩哔哩 bilibili.com","title":"【三国 全面战争】董卓战役攻略！第一话：兵不血刃灭马腾，连战连捷讨黄巾","type":"video","streams":{"16":{"urls":[{"url":"http://upos-hz-mirrorkodou.acgvideo.com/upgcxcode/87/84/95828487/95828487-1-15.flv?e=ig8euxZM2rNcNbRMhbUVhoM17wNBhwdEto8g5X10ugNcXBlqNxHxNEVE5XREto8KqJZHUa6m5J0SqE85tZvEuENvNC8xNEVE9EKE9IMvXBvE2ENvNCImNEVEK9GVqJIwqa80WXIekXRE9IMvXBvEuENvNCImNEVEua6m2jIxux0CkF6s2JZv5x0DQJZY2F8SkXKE9IB5QK==\u0026deadline=1560704498\u0026gen=playurl\u0026nbs=1\u0026oi=2071225943\u0026os=kodou\u0026platform=pc\u0026trid=5e77da9446d94d9cafd9769380030fdf\u0026uipk=5\u0026upsig=d55cd2b36111208ff3e555e7b9157b4d\u0026uparams=e,deadline,gen,nbs,oi,os,platform,trid,uipk\u0026mid=0","size":172944444,"ext":"flv"}],"quality":"流畅 360P","size":172944444},"32":{"urls":[{"url":"http://upos-hz-mirrorkodou.acgvideo.com/upgcxcode/87/84/95828487/95828487_nb2-1-32.flv?e=ig8euxZM2rNcNbNHhwdVhoMgnWdVhwdEto8g5X10ugNcXBlqNxHxNEVE5XREto8KqJZHUa6m5J0SqE85tZvEuENvNC8xNEVE9EKE9IMvXBvE2ENvNCImNEVEK9GVqJIwqa80WXIekXRE9IMvXBvEuENvNCImNEVEua6m2jIxux0CkF6s2JZv5x0DQJZY2F8SkXKE9IB5QK==\u0026deadline=1560704498\u0026gen=playurl\u0026nbs=1\u0026oi=2071225943\u0026os=kodou\u0026platform=pc\u0026trid=a8cb79821cd34a8f9b08baa5bcef7ad0\u0026uipk=5\u0026upsig=2590decc81618f4bf236c8865067566d\u0026uparams=e,deadline,gen,nbs,oi,os,platform,trid,uipk\u0026mid=0","size":348294840,"ext":"flv"}],"quality":"清晰 480P","size":348294840},"64":{"urls":[{"url":"http://upos-hz-mirrorkodou.acgvideo.com/upgcxcode/87/84/95828487/95828487_nb2-1-64.flv?e=ig8euxZM2rNcNbUghwdVhoMBhbdVhwdEto8g5X10ugNcXBlqNxHxNEVE5XREto8KqJZHUa6m5J0SqE85tZvEuENvNC8xNEVE9EKE9IMvXBvE2ENvNCImNEVEK9GVqJIwqa80WXIekXRE9IMvXBvEuENvNCImNEVEua6m2jIxux0CkF6s2JZv5x0DQJZY2F8SkXKE9IB5QK==\u0026deadline=1560704497\u0026gen=playurl\u0026nbs=1\u0026oi=2071225943\u0026os=kodou\u0026platform=pc\u0026trid=bc67957e8c864d4e8b6fd485e060825d\u0026uipk=5\u0026upsig=8c81b407e0e37876e5e06cffeb346afc\u0026uparams=e,deadline,gen,nbs,oi,os,platform,trid,uipk\u0026mid=0","size":623651916,"ext":"flv"}],"quality":"高清 720P","size":623651916},"80":{"urls":[{"url":"http://upos-hz-mirrorks3u.acgvideo.com/upgcxcode/87/84/95828487/95828487_nb2-1-80.flv?e=ig8euxZM2rNcNbug7zUVhoMahbuBhwdEto8g5X10ugNcXBlqNxHxNEVE5XREto8KqJZHUa6m5J0SqE85tZvEuENvNC8xNEVE9EKE9IMvXBvE2ENvNCImNEVEK9GVqJIwqa80WXIekXRE9IMvXBvEuENvNCImNEVEua6m2jIxux0CkF6s2JZv5x0DQJZY2F8SkXKE9IB5QK==\u0026deadline=1560704497\u0026gen=playurl\u0026nbs=1\u0026oi=2071225943\u0026os=ks3u\u0026platform=pc\u0026trid=bc30174545684b3c92845571a0d4dbf5\u0026uipk=5\u0026upsig=a835091b735e0dcf389f2d2476ba79ab\u0026uparams=e,deadline,gen,nbs,oi,os,platform,trid,uipk\u0026mid=0","size":873942509,"ext":"flv"}],"quality":"高清 1080P","size":873942509}},"url":"https://www.bilibili.com/video/av54794627"}`;
+                payload = JSON.parse(payload)
+
+                var title = payload.title;
+                var streams = payload.streams;
+
+                Object.keys(streams).forEach(function (key) {
+                    var q = streams[key]['quality'];
+                    var s = streams[key]['size'];
+                    // var e = streams[key]['urls'][0]['ext'];
+                    html += `<label class="mdui-list-item mdui-ripple">
+                        <div class="mdui-radio btn-download"  data-key="${key}" title="${title}">
+                            <input type="radio" name="stream" />
+                            <i class="mdui-radio-icon"></i>
+                        </div>
+                        <i class="mdui-list-item-icon mdui-icon material-icons">ondemand_video</i>
+                        <div class="mdui-list-item-content"><b>${q}</b> (<span>${s} bit</span>)</div>
+                    </label>`
+                });
+                $$('#v-streams').html(html)
+            }
+        });
+
+        $$('#v-streams').on('click', '.btn-download', function (e) {
+            console.log(1);
+            selectSteamDialog.close();
+            mdui.snackbar({
+                position: "right-bottom",
+                message: '已建立缓存任务'
+            });
+            var title = $$(this).attr('title');
+            var key = $$(this).attr('data-key');
+            var inputUrl = $$('#input_url').val();
+            app.Addtask(inputUrl, key, title);
+        });
+
+        $$('#input_url').on({
+            'blur': function (e) {
+                console.log('触发了 失去焦点 事件');
+                isFocus = false;
+            },
+            'focus': function (e) {
+                console.log('触发了 获取焦点 事件');
+                isFocus = true;
+            },
+            'input': function (e) {
+                console.log('触发了 input 事件');
+                var v = $$('#input_url').val();
+                var disabledv = $$('#btn_url').attr('disabled');
+                if (v == '') {
+                    $$("#content_panal").css({
+                        'display': 'none',
+                    });
+                    $$('#btn_url').prop('disabled', true);
+                } else {
+                    $$('#btn_url').prop('disabled', false);
+                }
+            }
+        });
+
+        function getUUID() {
+            return parseInt(Math.random() * 10000000000000000000);
+        }
+
+        document.onkeydown = function (event) {
+            var e = event || window.event;
+            // v 86 c 67
+            if (e.ctrlKey && e.keyCode === 86 || e.metaKey && e.keyCode === 86) {
+                console.log('你按下了CTRL+V');
+                if (isFocus) {
+                    app.getClipboard(function (response) {
+                        console.log(response);
+                        // $$('#input_url').val(response.payload);
+                        var vpayload = "";
+                        if (response != 'undefined') {
+                            vpayload = response.payload
+                        }
+                        insertAfterText(document.getElementById('input_url'), vpayload)
+                        $$('#btn_url').prop('disabled', false);
+                    });
+                }
+            }
+
+            if (e.ctrlKey && e.keyCode === 88 || e.metaKey && e.keyCode === 88) {
+                console.log('你按下了CTRL+X');
+                if (isFocus) {
+                    var textDom = document.getElementById('input_url');
+                    var pos = getCursortPosition(textDom);
+                    console.log(pos);
+                    var selectStr = window.getSelection().toString();
+                    console.log(selectStr);
+                    var val = $$('#input_url').val();
+                    var t = val.replace(selectStr, '');
+                    console.log(t);
+                    $$('#input_url').val(t);
+                    setCaretPosition(textDom, pos);
+                }
+            }
+
+            if (e.ctrlKey && e.keyCode === 65 || e.metaKey && e.keyCode === 65) {
+                console.log('你按下了CTRL+A');
+                if (isFocus) {
+                    var textDom = document.getElementById('input_url');
+                    var len = textDom.value.length;
+                    setSelectText(textDom, 0, len);
+                }
+            }
+        };
+
+        // 在光标后插入文本
+        function insertAfterText(textDom, value) {
+            var selectRange;
+            if (document.selection) {
+                // IE Support
+                textDom.focus();
+                selectRange = document.selection.createRange();
+                selectRange.text = value;
+                textDom.focus();
+            } else if (textDom.selectionStart || textDom.selectionStart == '0') {
+                // Firefox support
+                var startPos = textDom.selectionStart;
+                var endPos = textDom.selectionEnd;
+                var scrollTop = textDom.scrollTop;
+                textDom.value = textDom.value.substring(0, startPos) + value + textDom.value.substring(endPos, textDom.value.length);
+                textDom.focus();
+                textDom.selectionStart = startPos + value.length;
+                textDom.selectionEnd = startPos + value.length;
+                textDom.scrollTop = scrollTop;
+            }
+            else {
+                textDom.value += value;
+                textDom.focus();
+            }
+        }
+        // 获取光标位置
+        function getCursortPosition(textDom) {
+            var cursorPos = 0;
+            if (document.selection) {
+                // IE Support
+                textDom.focus();
+                var selectRange = document.selection.createRange();
+                selectRange.moveStart('character', -textDom.value.length);
+                cursorPos = selectRange.text.length;
+            } else if (textDom.selectionStart || textDom.selectionStart == '0') {
+                // Firefox support
+                cursorPos = textDom.selectionStart;
+            }
+            return cursorPos;
+        }
+        // 设置光标位置
+        function setCaretPosition(textDom, pos) {
+            if (textDom.setSelectionRange) {
+                // IE Support
+                textDom.focus();
+                textDom.setSelectionRange(pos, pos);
+            } else if (textDom.createTextRange) {
+                // Firefox support
+                var range = textDom.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', pos);
+                range.moveStart('character', pos);
+                range.select();
+            }
+        }
+
+        // 选中特定范围的文本
+        function setSelectText(textDom, startPos, endPos) {
+            var startPos = parseInt(startPos),
+                endPos = parseInt(endPos),
+                textLength = textDom.value.length;
+            if (textLength) {
+                if (!startPos) {
+                    startPos = 0;
+                }
+                if (!endPos) {
+                    endPos = textLength;
+                }
+                if (startPos > textLength) {
+                    startPos = textLength;
+                }
+                if (endPos > textLength) {
+                    endPos = textLength;
+                }
+                if (startPos < 0) {
+                    startPos = textLength + startPos;
+                }
+                if (endPos < 0) {
+                    endPos = textLength + endPos;
+                }
+                if (textDom.createTextRange) {
+                    // IE Support
+                    var range = textDom.createTextRange();
+                    range.moveStart("character", -textLength);
+                    range.moveEnd("character", -textLength);
+                    range.moveStart("character", startPos);
+                    range.moveEnd("character", endPos);
+                    range.select();
+                } else {
+                    // Firefox support
+                    textDom.setSelectionRange(startPos, endPos);
+                    textDom.focus();
+                }
+            }
+        }
+
+        Array.prototype.min = function() {
+        var min = this[0];
+        var len = this.length;
+        for (var i = 1; i < len; i++){ 
+        if (this[i] < min){ 
+        min = this[i]; 
+        } 
+        } 
+        return min;
+        }
+        //最大值
+        Array.prototype.max = function() { 
+        var max = this[0];
+        var len = this.length; 
+        for (var i = 1; i < len; i++){ 
+        if (this[i] > max) { 
+        max = this[i]; 
+        } 
+        } 
+        return max;
+        }
+    </script>
+</body>
+
+</html>

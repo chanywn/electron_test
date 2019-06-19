@@ -16,10 +16,8 @@ function createWindow () {
     minWidth:        850,
     width:           850,
     fullscreenable:  false,
-    titleBarStyle:   "hiddenInset",
-    webPreferences: {
-      nodeIntegration: true
-    },
+    titleBarStyle:   "hidden",
+    frame: false
   })
 
   // 加载index.html文件

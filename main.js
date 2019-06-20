@@ -1,3 +1,5 @@
+require('./download');
+
 const { app, BrowserWindow } = require('electron')
 
 // 保持对window对象的全局引用，如果不这么做的话，当JavaScript对象被
@@ -63,6 +65,3 @@ app.on('activate', () => {
     createWindow()
   }
 })
-
-// 在这个文件中，你可以续写应用剩下主进程代码。
-// 也可以拆分成几个文件，然后用 require 导入。

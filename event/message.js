@@ -26,10 +26,10 @@ task.on('dl-start', function(dl){
     console.log("dl start ")
 })
 
-newTask({
-    'url': "http://www.iqiyi.com/v_19rrax9nq4.html?vfm=2008_aldbd",
-    'q': "5"
-})
+// newTask({
+//     'url': "http://www.iqiyi.com/v_19rrax9nq4.html?vfm=2008_aldbd",
+//     'q': "5"
+// })
 
 function newTask(option) {
     request({
@@ -97,3 +97,8 @@ function createDownloadTask(option, callback) {
     task.emit('dl-start', dl);
     return dl;
 }
+
+
+export default function handleMessage() {
+    newTask();
+  }

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>DEV</title>
+    <link rel="stylesheet" href="static/lib/mdui/css/mdui.min.css">
+    <link rel="stylesheet" href="static/css/base.css">
+</head>
+
+<body class="mdui-bottom-nav-fixed1 mdui-theme-primary-indigo mdui-theme-accent-indigo"
+    style="background: #f4f4f4;overflow: hidden;">
+    <div style="position: fixed;top:0;width:100%;height:56px;-webkit-app-region: drag;"></div>
+
+    <div id="bar_panal" class="mdui-bottom-nav mdui-bottom-nav-text-auto mdui-color-theme mdui-tab1" mdui-tab
+        style="z-index: 9999;">
+
+        <a href="#download_layer" class="mdui-ripple mdui-ripple-white  mdui-bottom-nav-active">
+            <i class="mdui-icon material-icons">file_download</i>
+            <label>正在下载</label>
+        </a>
+        <a href="#finish_layer" class="mdui-ripple mdui-ripple-white">
+            <i class="mdui-icon material-icons">insert_emoticon</i>
+            <label>已完成</label>
+        </a>
+        <a href="#setting_layer" class="mdui-ripple mdui-ripple-white">
+            <i class="mdui-icon material-icons">settings</i>
+            <label>设置</label>
+        </a>
+
+    </div>
+    <div class="header-box">
+        <img class="header-avatar" src="static/ddd_avatar.jpg" alt="">
+    </div>
+
+    <div class="">
+        <div id="download_layer" class="">
+            <div class="mdui-btn-group"
+                style="position: fixed;z-index: 9999;margin-bottom: 10px;width: 100%;background-color: #fdfdfd;border-bottom: 1px solid rgba(0, 0, 0, 0.2);padding: 0 30px;">
+                <button id="btn_add" mdui-tooltip="{content: '新建下载任务'}" type="button" class="mdui-btn"><i
+                        class="mdui-icon material-icons">add_circle_outline</i></button>
+                <button type="button" mdui-tooltip="{content: '开始'}" class="mdui-btn"><i
+                        class="mdui-icon material-icons">play_arrow</i></button>
+                <button type="button" mdui-tooltip="{content: '暂停'}" class="mdui-btn"><i
+                        class="mdui-icon material-icons">pause</i></button>
+                <button type="button" mdui-tooltip="{content: '删除'}" class="mdui-btn"><i
+                        class="mdui-icon material-icons">delete</i></button>
+                <button type="button" mdui-tooltip="{content: ' 帮助'}" class="mdui-btn"><i
+                        class="mdui-icon material-icons">help</i></button>
+            </div>
+            <div class="layer">
+                <div id="v-downloads" class="mdui-panel" mdui-panel style="padding-top: 41px;">
+                    <div id="download-mc-empty" class="mc-empty">
+                        <div class="title">没有任何下载任务</div>
+                        <div class="description">新建下载任务后，相应的下载任务就会显示在此处。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="finish_layer" class="">
+            <div class="layer">
+                <div id="v-downloads" class="mdui-panel" mdui-panel>
+                    <div id="finish-mc-empty" class="mc-empty">
+                        <div class="title">没有任何下载任务</div>
+                        <div class="description">新建下载任务后，相应的下载任务就会显示在此处。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="setting_layer" class="">
+            <div class="layer">
+                <ul class="mdui-list">
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">message</i>
+                        <div class="mdui-list-item-content">打开消息通知</div>
+                        <label class="mdui-switch">
+                            <input type="checkbox" checked />
+                            <i class="mdui-switch-icon"></i>
+                        </label>
+                    </li>
+
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">cloud_download</i>
+                        <div class="mdui-list-item-content">设置下载目录 <span
+                                style="color:#999;font-size:0.9em;">/Users/chenhao/project/go-astilectron-demo</span>
+                        </div>
+
+                    </li>
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">layers</i>
+                        <div class="mdui-list-item-content">主题颜色</div>
+                    </li>
+
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">data_usage</i>
+                        <div class="mdui-list-item-content">使用说明</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="mdui-dialog" id="new_task_dialog" style="width: 450px;">
+        <div class="mdui-dialog-content" style="height: 116px;">
+            <div class="mdui-textfield">
+                <label class="mdui-textfield-label">请输入网页视频播放页连接</label>
+                <input id="input_url" class="mdui-textfield-input" type="text">
+            </div>
+            <div class="">
+                <label class="mdui-checkbox">
+                    <input id="input_auto" type="checkbox" />
+                    <i class="mdui-checkbox-icon"></i>
+                    手动选择视频流
+                </label>
+            </div>
+        </div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
+            <button id="btn_create_task" class="mdui-btn mdui-ripple" mdui-dialog-confirm>创建</button>
+        </div>
+    </div>
+
+    <div class="mdui-dialog" id="select_steam_dialog" style="width: 450px;top:110px;min-height: 250px">
+        <div class="mdui-dialog-content" style="min-height: 250px">
+            <div id="v-streams" class="mdui-list">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var ipcRenderer = require('electron').ipcRenderer;
+    </script>
+    <script src="static/lib/mdui/js/mdui.min.js"></script>
+    <script src="static/js/app.js"></script>
+    <script>
+        app.listen();
+        var $$ = mdui.JQ;
+        var t, opacity;
+        var isFocus = false;
+
+        var newTaskDialog = new mdui.Dialog("#new_task_dialog", {
+            "overlay": false,
+            "modal": true
+        });
+
+        var selectSteamDialog = new mdui.Dialog("#select_steam_dialog", {
+            "overlay": false,
+            "modal": true
+        });
+
+        $$('#btn_add').on('click', function () {
+            $$("#input_url").val('');
+            newTaskDialog.open();
+        })
+
+        $$("#btn_create_task").on('click', function () {
+            var inputUrl = $$("#input_url").val();
+            var isInputSelect = $$("#input_auto").prop('checked');
+            console.log(inputUrl);
+            console.log(isInputSelect);
+
+            var html = "";
+            $$('#v-streams').html(html)
+            app.search(inputUrl, function (response) {
+                console.log(response);
+                var title = response[0].title;
+                console.log(title);
+                $$('#v-title').text(title)
+                var streams = response[0].streams;
+                if (isInputSelect) {
+                    selectSteamDialog.open();
+                    Object.keys(streams).forEach(function (key) {
+                        var q = streams[key]['quality'];
+                        var s = streams[key]['size'];
+                        html += `<label class="mdui-list-item mdui-ripple">
+                            <div class="mdui-radio btn-download"  data-key="${key}" title="${title}">
+                                <input type="radio" name="stream" />
+                                <i class="mdui-radio-icon"></i>
+                            </div>
+                            <i class="mdui-list-item-icon mdui-icon material-icons">ondemand_video</i>
+                            <div class="mdui-list-item-content"><b>${q}</b> (<span>${s} bit</span>)</div>
+                        </label>`
+                    });
+                    $$('#v-streams').html(html)
+                } else {
+                    var keys = Object.keys(streams);
+                    console.log(keys);
+                    var key = keys.max()
+                    console.log(key);
+                    var q = streams[key]['quality'];
+                    var s = streams[key]['size'];
+                    html += `<label class="mdui-list-item mdui-ripple">
+                        <div class="mdui-radio btn-download"  data-key="${key}" title="${title}">
+                            <input type="radio" name="stream" />
+                            <i class="mdui-radio-icon"></i>
+                        </div>
+                        <i class="mdui-list-item-icon mdui-icon material-icons">ondemand_video</i>
+                        <div class="mdui-list-item-content"><b>${q}</b> (<span>${s} bit</span>)</div>
+                    </label>`
+                    $$('#v-streams').html(html)
+                    app.Addtask(
+                        response[0],
+                        key,
+                    );
+                }
+            })
+        });
+
+        $$('#v-streams').on('click', '.btn-download', function (e) {
+            console.log(1);
+            selectSteamDialog.close();
+            mdui.snackbar({
+                position: "right-bottom",
+                message: '已建立缓存任务'
+            });
+            var title = $$(this).attr('title');
+            var key = $$(this).attr('data-key');
+            var inputUrl = $$('#input_url').val();
+            app.Addtask(inputUrl, key, title);
+        });
+
+        $$('#input_url').on({
+            'blur': function (e) {
+                // console.log('触发了 失去焦点 事件');
+                isFocus = false;
+            },
+            'focus': function (e) {
+                // console.log('触发了 获取焦点 事件');
+                isFocus = true;
+            },
+            'input': function (e) {
+                // console.log('触发了 input 事件');
+                var v = $$('#input_url').val();
+                var disabledv = $$('#btn_url').attr('disabled');
+                if (v == '') {
+                    $$("#content_panal").css({
+                        'display': 'none',
+                    });
+                    $$('#btn_url').prop('disabled', true);
+                } else {
+                    $$('#btn_url').prop('disabled', false);
+                }
+            }
+        });
+
+        function getUUID() {
+            return parseInt(Math.random() * 10000000000000000000);
+        }
+
+        Array.prototype.max = function () {
+            var max = this[0];
+            var len = this.length;
+            for (var i = 1; i < len; i++) {
+                if (this[i] > max) {
+                    max = this[i];
+                }
+            }
+            return max;
+        }
+    </script>
+</body>
+
+</html>

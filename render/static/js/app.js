@@ -1,3 +1,4 @@
+
 let app = {
     about: function(html) {
         let c = document.createElement("div");
@@ -5,34 +6,23 @@ let app = {
         asticode.modaler.setContent(c);
         asticode.modaler.show();
     },
-    init: function() {
-        // Wait for astilectron to be ready
-        document.addEventListener('astilectron-ready', function() {
-            app.listen();
-        })
-    },
     search: function(url, callback) {
-        let request = {
-            "name": "search",
+        let response = ipcRenderer.sendSync('search', {
             "payload":url
-        };
-        astilectron.sendMessage(request, function(response) {
-            callback && callback(response);
-        })
+        });
+        callback && callback(response);
     },
     listen: function() {
-        astilectron.onMessage(function(message) {
-            switch (message.name) {
-                case "about":
-                    app.about(message.payload);
-                    return {payload: "payload"};
-                    break;
-                case "progess":
-                    app.Progess(message.payload);
-                    return {payload: "payload"};
-                    break;
-            }
-        });
+        ipcRenderer.on('search-reply', (event, payload) => {
+            console.log(payload);
+        }).on('video-download-reply', (event, payload) => {
+            console.log(payload);
+            $$("#finish_" + payload.uuid).text(`${payload.downloaded}/${payload.total}`)
+            $$("#botper_" + payload.uuid).css("width", payload.progress + "%")
+            $$("#per_" + payload.uuid).text(payload.progress + "%")
+            $$("#speed_" + payload.uuid).text(payload.speed + "/s")
+            $$("#index_" + payload.uuid).text(payload.partIndex + 1)
+        })
     },
     notice: function (head, title, msg) {
         var Notification = window.Notification || window.mozNotification || window.webkitNotification;
@@ -74,54 +64,31 @@ let app = {
             console.log("您的浏览器不支持桌面消息");
         }
     },
-    getClipboard: function (callback) {
-        let request = {
-            "name": "get_clipboard",
-            "payload": ""
-        };
-        astilectron.sendMessage(request, function(response) {
-            // console.log(response);
-            callback && callback(response);
-        })
-    },
-    
     createDownload: function(payload, callback) {
-        let request = {
-            "name": "video_download",
-            "payload": payload
-        };
-        astilectron.sendMessage(request, function(response) {
-            // console.log(response);
-            callback && callback(response);
-        })
+        let response = ipcRenderer.send('video-download', payload);
+        callback && callback(response);
     },
-    Progess: function (payload) {
-        console.log(payload)
-        if (payload != 'undefined') {
-            var ConsumedBytes = fileLengthFormat(payload.ConsumedBytes / 8,1) + "/" + fileLengthFormat(payload.TotalBytes / 8,1);
-            // console.log(ConsumedBytes)
-            $$("#per_" + payload.uuid).text(ConsumedBytes)
-            $$("#botper_" + payload.uuid).css("width", payload.Progess + "%")
-            $$("#speed_" + payload.uuid).text(fileLengthFormatPerScond(payload.IncrementBytesPerSecond / 8, 1))
-        }
-    },
-    Addtask: function(url, key, title){
+    Addtask: function(data, index, title){
         mdui.snackbar({
             position: "right-bottom",
             message: '已建立缓存任务'
         });
-
+        var title = data.title;
         var uuid = getUUID();
+        var target = data.streams[index];
+        // 构建数据
         html = `<div class="mdui-panel-item mdui-panel-item-open" title="${title}">
             <div class="mdui-panel-item-header">
                 <div class="mdui-panel-item-title" style="line-height: 48px;">
+                    <span>【<span id="index_${uuid}">0</span>/${target.urls.length}】</span>
                     <span>${title}</span>
                 </div>
+                <div id="finish_${uuid}" class="mdui-panel-item-summary"></div>
                 <div id="per_${uuid}" class="mdui-panel-item-summary"></div>
-                <div id="speed_${uuid}" class="mdui-panel-item-summary"></div>
+                <div id="speed_${uuid}" class="mdui-panel-item-summary" style="text-align: right;"></div>
             </div>
             <div class="mdui-panel-item-body">
-                <div class="mdui-progress">
+                    <div class="mdui-progress">
                     <div id="botper_${uuid}" class="mdui-progress-determinate" style="width: 0%;"></div>
                 </div>
             </div>
@@ -132,8 +99,8 @@ let app = {
         $$("#download-mc-empty").css('display', 'none');
         app.createDownload({
             "uuid": uuid,
-            'url': url,
-            'index': key
+            'data': data,
+            'index': index
         }, function (response) {
             console.log(response);
         });
@@ -158,30 +125,6 @@ function fileLengthFormat(total, n) {
                 break;
             case 4:
                 format = len.toFixed(2) + "TB";
-                break;
-        }
-        return format;
-    }
-}
-
-function fileLengthFormatPerScond(total, n) {
-    var format;
-    var len = total / (1024.0);
-    if (len > 1000) {
-        return arguments.callee(len, ++n);
-    } else {
-        switch (n) {
-            case 1:
-                format = len.toFixed(2) + "KB/s";
-                break;
-            case 2:
-                format = len.toFixed(2) + "MB/s";
-                break;
-            case 3:
-                format = len.toFixed(2) + "GB/s";
-                break;
-            case 4:
-                format = len.toFixed(2) + "TB/s";
                 break;
         }
         return format;

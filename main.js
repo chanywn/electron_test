@@ -1,67 +1,157 @@
-require('./download');
+const { app, BrowserWindow } = require('electron');
 
-const { app, BrowserWindow } = require('electron')
+let mainWindow
 
-// 保持对window对象的全局引用，如果不这么做的话，当JavaScript对象被
-// 垃圾回收的时候，window对象将会自动的关闭
-let win
-
-function createWindow () {
-  win = new BrowserWindow({
+function createWindow() {
+  mainWindow = new BrowserWindow({
     backgroundColor: "#f4f4f4",
-    show:            false,
-    opacity:         1.0,
-    center:          true,
-    minHeight:       480,
-    height:          480,
-    maxWidth:        850,
-    minWidth:        850,
-    width:           850,
-    fullscreenable:  false,
-    titleBarStyle:   "hidden",
-    frame: false
+    show: false,
+    opacity: 1.0,
+    center: true,
+    minHeight: 480,
+    height: 480,
+    maxWidth: 850,
+    minWidth: 850,
+    width: 850,
+    fullscreenable: false,
+    titleBarStyle: "hidden",
+    frame: false,
+    webPreferences: {
+      nodeIntegration: true
+    }
   })
-
-  // 加载index.html文件
-  win.loadFile('app/index.html')
-
-  // 打开开发者工具
-  // win.webContents.openDevTools()
-
-  win.once('ready-to-show', () => {
-    win.show()
+  mainWindow.loadFile('render/index.html')
+  mainWindow.webContents.openDevTools()
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
   })
-
-  // 当 window 被关闭，这个事件会被触发。
-  win.on('closed', () => {
-    // 取消引用 window 对象，如果你的应用支持多窗口的话，
-    // 通常会把多个 window 对象存放在一个数组里面，
-    // 与此同时，你应该删除相应的元素。
-    win = null
+  mainWindow.on('closed', () => {
+    mainWindow = null
   })
-
+  global.mainId = mainWindow.id;
 }
 
-// Electron 会在初始化后并准备
-// 创建浏览器窗口时，调用这个函数。
-// 部分 API 在 ready 事件触发后才能使用。
-app.on('ready', createWindow)
+app.on('ready', () => {
+  createWindow();
+})
 
-
-
-// 当全部窗口关闭时退出。
 app.on('window-all-closed', () => {
-  // 在 macOS 上，除非用户用 Cmd + Q 确定地退出，
-  // 否则绝大部分应用及其菜单栏会保持激活。
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
 
 app.on('activate', () => {
-  // 在macOS上，当单击dock图标并且没有其他窗口打开时，
-  // 通常在应用程序中重新创建一个窗口。
-  if (win === null) {
+  if (mainWindow === null) {
     createWindow()
   }
 })
+
+const request = require('request');
+const fs = require('fs');
+const async = require('async');
+const EventEmitter = require('events').EventEmitter
+const { DownloaderHelper } = require('node-downloader-helper');
+const { byteHelper } = require('./helpers');
+const { ipcMain } = require('electron')
+
+
+// var dls = new Array();
+var task = new EventEmitter();
+var dts = new Array();
+
+task.on('dl-start', function(dl) {
+    dl.start();
+    console.log("dl start")
+});
+
+ipcMain.on('search', (event, data) => {
+  console.log(data)
+    request({
+        url: `http://localhost:9090/?u=${data.payload}`,
+        method: "GET",
+        headers: {
+            "content-type": "application/json",
+        },
+    }, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var body = JSON.parse(body);
+            // event.reply('search-reply', body)
+            event.returnValue = body
+        } else {
+            console.log("请求失败或无响应")
+            // event.reply('search-reply', {"error":"请求失败或无响应"})
+            event.returnValue = {"error":"请求失败或无响应"}
+        }
+    });
+})
+
+ipcMain.on('video-download', (event, data) => {
+  console.log(data)
+  data.event = event;
+  newTask(data);
+})
+
+function newTask(params) {
+    var title = params.data.title;
+    var target = params.data.streams[params.index];
+    var dirname =  "/Users/chenhao/project/electron_test/" + title
+    if (!fs.existsSync(dirname)) {
+        fs.mkdirSync(dirname, 0777)
+    }
+    var urlList = new Array();
+    for(var i = 0; i < target.urls.length ; i++) {
+        urlList[i] = {
+            'event':params.event,
+            'uuid': params.uuid,
+            'partIndex':i,
+            'url': target.urls[i]['url'],
+            'dirname': dirname,
+            'filename': `${i}.${target.urls[i]['ext']}`
+        };
+    }
+    async.mapLimit(urlList, 1, function(option, callback) {
+        dts[option['filename']] = createDownloadTask(option, callback);
+    }, function(err, result) {
+        console.log('down')
+    });
+    return dts;
+}
+
+function createDownloadTask(option, callback) {
+    // 检测文件是否存在
+    const options = {
+        method: 'GET',
+        headers: {},
+        fileName: option.filename,
+        override: false,
+        forceResume: false, 
+        httpRequestOptions: {}, 
+        httpsRequestOptions: {} 
+    };
+    var dl = new DownloaderHelper(option.url, option.dirname, options);
+    dl.on('end', () => {
+        console.log('Download Completed');
+        callback(null, 'Download Completed');
+    })
+    .on('error', err => console.error('Something happend', err))
+    .on('stateChanged', state => console.log('State: ', state))
+    .once('download', () => {})
+    .on('progress', stats => {
+        const progress = stats.progress.toFixed(1);
+        const speed = byteHelper(stats.speed);
+        const downloaded = byteHelper(stats.downloaded);
+        const total = byteHelper(stats.total);
+        console.log(`[${option.uuid}] [${option.filename}] ${speed}/s - ${progress}% [${downloaded}/${total}]`);
+        option.event.reply('video-download-reply', {
+          "uuid":option.uuid,
+          'partIndex':option.partIndex,
+          "progress":progress,
+          'speed':speed,
+          'downloaded':downloaded,
+          'total':total
+        })
+    });
+    task.emit('dl-start', dl);
+    return dl;
+}

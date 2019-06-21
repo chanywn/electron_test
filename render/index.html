@@ -80,10 +80,10 @@
                         </label>
                     </li>
 
-                    <li class="mdui-list-item mdui-ripple">
+                    <li id="btn_sys_download_dir" class="mdui-list-item mdui-ripple">
                         <i class="mdui-list-item-icon mdui-icon material-icons">cloud_download</i>
-                        <div class="mdui-list-item-content">设置下载目录 <span
-                                style="color:#999;font-size:0.9em;">/Users/chenhao/project/go-astilectron-demo</span>
+                        <div class="mdui-list-item-content">设置下载目录 
+                            <span id="sys_download_dir" style="color:#999;font-size:0.9em;"></span>
                         </div>
 
                     </li>
@@ -129,7 +129,8 @@
     </div>
 
     <script>
-        var ipcRenderer = require('electron').ipcRenderer;
+        var electron = require('electron');
+        var ipcRenderer = electron.ipcRenderer;
     </script>
     <script src="static/lib/mdui/js/mdui.min.js"></script>
     <script src="static/js/app.js"></script>
@@ -234,32 +235,19 @@
                 }, function(){})
             }
         });
+
+        const { remote } = electron;
         
-
-        $$('#input_url').on({
-            'blur': function (e) {
-                // console.log('触发了 失去焦点 事件');
-                isFocus = false;
-            },
-            'focus': function (e) {
-                // console.log('触发了 获取焦点 事件');
-                isFocus = true;
-            },
-            'input': function (e) {
-                // console.log('触发了 input 事件');
-                var v = $$('#input_url').val();
-                var disabledv = $$('#btn_url').attr('disabled');
-                if (v == '') {
-                    $$("#content_panal").css({
-                        'display': 'none',
-                    });
-                    $$('#btn_url').prop('disabled', true);
-                } else {
-                    $$('#btn_url').prop('disabled', false);
+        $$("#btn_sys_download_dir").on('click', function(){
+            remote.dialog.showOpenDialog({
+                properties: ['openDirectory']
+            }, (data) => {
+                if (data) {
+                    $$("#sys_download_dir").text(data[0]);
+                    localStorage.setItem("sys_download_dir", data[0]);
                 }
-            }
+            })
         });
-
         function getUUID() {
             return parseInt(Math.random() * 10000000000000000000);
         }

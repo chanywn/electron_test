@@ -1,10 +1,11 @@
 
 let app = {
-    about: function(html) {
-        let c = document.createElement("div");
-        c.innerHTML = html;
-        asticode.modaler.setContent(c);
-        asticode.modaler.show();
+    init: function(html) {
+        
+        var sys_download_dir = localStorage.getItem("sys_download_dir", data[0]);
+        if (sys_download_dir) {
+            $$("#sys_download_dir").text(sys_download_dir);
+        }
     },
     search: function(url, callback) {
         let response = ipcRenderer.sendSync('search', {

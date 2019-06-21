@@ -54,7 +54,7 @@ const EventEmitter = require('events').EventEmitter
 const { DownloaderHelper } = require('node-downloader-helper');
 const { byteHelper } = require('./helpers');
 const { ipcMain } = require('electron')
-
+const os = require("os");
 
 // var dls = new Array();
 var task = new EventEmitter();
@@ -104,11 +104,16 @@ ipcMain.on('video-download-resume', (event, data) => {
   // console.log(dts)
 })
 
-
 function newTask(params) {
     var title = params.data.title;
     var target = params.data.streams[params.index];
-    var dirname =  "/Users/yucongtang/project/electron_test/" + title
+    var homeDir = os.homedir();
+    if (os.type() == 'Darwin') {
+      var dirname =  homeDir + "/Downloads/" + title;
+    } else if (os.type() == 'Windows_NT') {
+      var dirname = "C:\\"; + title;
+    }
+
     if (!fs.existsSync(dirname)) {
         fs.mkdirSync(dirname, 0777)
     }

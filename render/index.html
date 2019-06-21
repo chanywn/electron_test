@@ -220,6 +220,21 @@
             app.Addtask(inputUrl, key, title);
         });
 
+        $$('#v-downloads').on('click', '.btn_pause', function (e) {
+            if ($$("#pause_" + payload.uuid).text() == "暂停") {
+                app.pause({
+                    "uuid":$$(this).attr("data-uuid"),
+                    'index':$$(this).attr("data-index")
+                }, function(){})
+            } else {
+                app.resume({
+                    "uuid":$$(this).attr("data-uuid"),
+                    'index':$$(this).attr("data-index")
+                }, function(){})
+            }
+        });
+        
+
         $$('#input_url').on({
             'blur': function (e) {
                 // console.log('触发了 失去焦点 事件');

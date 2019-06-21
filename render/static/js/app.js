@@ -16,12 +16,21 @@ let app = {
         ipcRenderer.on('search-reply', (event, payload) => {
             console.log(payload);
         }).on('video-download-reply', (event, payload) => {
-            console.log(payload);
+            // console.log(payload);
             $$("#finish_" + payload.uuid).text(`${payload.downloaded}/${payload.total}`)
             $$("#botper_" + payload.uuid).css("width", payload.progress + "%")
             $$("#per_" + payload.uuid).text(payload.progress + "%")
             $$("#speed_" + payload.uuid).text(payload.speed + "/s")
             $$("#index_" + payload.uuid).text(payload.partIndex + 1)
+
+            $$("#pause_" + payload.uuid).attr("data-index",payload.partIndex)
+        }).on('video-download-status-reply', (event, payload) => {
+            if (payload.state == "DOWNLOADING") {
+                $$("#pause_" + payload.uuid).text("暂停")
+            } else if (payload.state == "PAUSED") {
+                $$("#pause_" + payload.uuid).text("开始")
+            }
+            console.log(payload);
         })
     },
     notice: function (head, title, msg) {
@@ -91,6 +100,10 @@ let app = {
                     <div class="mdui-progress">
                     <div id="botper_${uuid}" class="mdui-progress-determinate" style="width: 0%;"></div>
                 </div>
+                <div class="mdui-panel-item-actions">
+                    <button class="mdui-btn mdui-ripple">cancel</button>
+                    <button id="pause_${uuid}" data-uuid="${uuid}" data-index="" class="btn_pause mdui-btn mdui-ripple">暂停</button>
+                </div>
             </div>
         </div>`;
         $$('#v-downloads').append(html);
@@ -104,7 +117,15 @@ let app = {
         }, function (response) {
             console.log(response);
         });
-    }
+    },
+    pause: function(payload, callback) {
+        let response = ipcRenderer.send('video-download-pause', payload);
+        callback && callback(response);
+    },
+    resume: function(payload, callback) {
+        let response = ipcRenderer.send('video-download-resume', payload);
+        callback && callback(response);
+    },
 };
 
 function fileLengthFormat(total, n) {

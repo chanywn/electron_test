@@ -43,7 +43,7 @@ function newTask(option) {
             var rets = JSON.parse(body);
             var title = rets[0].title;
             var target = rets[0].streams[option.q];
-            var dirname =  "/Users/yucongtang/project/electron_test/" + title
+            var dirname =  "/Users/yucongtang/project//electron_test/" + title
             fs.mkdir(dirname, 0777, function (err) {
                 if(err) { return console.log(err); }
                 return;

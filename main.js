@@ -58,7 +58,7 @@ const { ipcMain } = require('electron')
 
 // var dls = new Array();
 var task = new EventEmitter();
-var dts = new Array();
+var dts = {};
 
 task.on('dl-start', function(dl) {
     dl.start();
@@ -92,10 +92,23 @@ ipcMain.on('video-download', (event, data) => {
   newTask(data);
 })
 
+ipcMain.on('video-download-pause', (event, data) => {
+  console.log(data)
+  dts[data.uuid]['av'+data.index].pause();
+  // console.log(dts)
+})
+
+ipcMain.on('video-download-resume', (event, data) => {
+  console.log(data)
+  dts[data.uuid]['av'+data.index].resume();
+  // console.log(dts)
+})
+
+
 function newTask(params) {
     var title = params.data.title;
     var target = params.data.streams[params.index];
-    var dirname =  "/Users/chenhao/project/electron_test/" + title
+    var dirname =  "/Users/yucongtang/project/electron_test/" + title
     if (!fs.existsSync(dirname)) {
         fs.mkdirSync(dirname, 0777)
     }
@@ -111,7 +124,10 @@ function newTask(params) {
         };
     }
     async.mapLimit(urlList, 1, function(option, callback) {
-        dts[option['filename']] = createDownloadTask(option, callback);
+        if (!dts[params.uuid]) {
+          dts[params.uuid] = new Array();
+        }
+        dts[params.uuid]["av" + option['partIndex']] = createDownloadTask(option, callback);
     }, function(err, result) {
         console.log('down')
     });
@@ -134,8 +150,17 @@ function createDownloadTask(option, callback) {
         console.log('Download Completed');
         callback(null, 'Download Completed');
     })
-    .on('error', err => console.error('Something happend', err))
-    .on('stateChanged', state => console.log('State: ', state))
+    .on('error', err => {
+      console.error('Something happend', err)
+    })
+    .on('stateChanged', state => {
+      console.log('State: ', state)
+      option.event.reply('video-download-status-reply', {
+        "uuid":option.uuid,
+        'partIndex':option.partIndex,
+        "state":state,
+      })
+    })
     .once('download', () => {})
     .on('progress', stats => {
         const progress = stats.progress.toFixed(1);

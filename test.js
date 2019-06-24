@@ -26,5 +26,13 @@ task.once('start', function(who){
     console.log("start " + who)
 })
 
-d();
+// d();
 
+var value = "带着爸爸去留学 /第12集 老黄紧盯儿子遭群嘲"
+
+function getRegDir(value){
+    var reg=/\\|\/|\?|\？|\*|\"|\“|\”|\'|\‘|\’|\<|\>|\{|\}|\[|\]|\【|\】|\：|\:|\、|\^|\$|\!|\~|\`|\|\|/g;
+    value = value.replace(reg,"");
+    return value.replace(/\s+/g,"_");;
+}
+console.log(getRegDir(value));

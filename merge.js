@@ -1,18 +1,18 @@
 const { exec } = require('child_process');
 const fs = require('fs');
-
-var mergeFilePath = "/Users/yucongtang/Downloads/少年派妙妙新生入学欢乐多/a.cache";
-var mergedFilePath = "/Users/yucongtang/Downloads/少年派妙妙新生入学欢乐多/妙妙新生入学欢乐多.mp4";
+var t = "荒村怨灵";
+var mergeFilePath = "/Users/chenhao/Downloads/"+t+"/tmp.txt";
+var mergedFilePath = "/Users/chenhao/Downloads/"+t+"/1.mp4";
 var content = "";
-for (var i=0;i<=247; i++) {
-    content += "file '" +i + ".ts'\n";
+for (var i=0;i<=6; i++) {
+    content += "file '" +i + ".f4v'\n";
 }
 fs.writeFile(mergeFilePath, content, { 'flag': 'a' }, function(err) {
     if (err) {
         console.log(err);
         return;
     }
-    var cmd = `ffmpeg -y -f concat -safe -1 -i ${mergeFilePath} -c copy -bsf:a aac_adtstoasc ${mergedFilePath}`;
+    var cmd = `./ffmpeg -y -f concat -safe -1 -i ${mergeFilePath} -c copy -bsf:a aac_adtstoasc ${mergedFilePath}`;
     exec(cmd, (err, stdout, stderr) => {
         if(err) {
             console.log(err);

@@ -235,9 +235,15 @@
                 }, function(){})
             }
         });
+        const os = require('os')
+        const { shell } = electron
+
+        $$('#v-downloads').on('click', '.btn_file', function (e) {
+            shell.showItemInFolder(os.homedir() + "/Downloads")
+        });
 
         const { remote } = electron;
-        
+
         $$("#btn_sys_download_dir").on('click', function(){
             remote.dialog.showOpenDialog({
                 properties: ['openDirectory']

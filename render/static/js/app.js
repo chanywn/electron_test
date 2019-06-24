@@ -84,6 +84,7 @@ let app = {
             message: '已建立缓存任务'
         });
         var title = data.title;
+        var url = data.url;
         var uuid = getUUID();
         var target = data.streams[index];
         // 构建数据
@@ -102,8 +103,8 @@ let app = {
                     <div id="botper_${uuid}" class="mdui-progress-determinate" style="width: 0%;"></div>
                 </div>
                 <div class="mdui-panel-item-actions">
-                    <button class="mdui-btn mdui-ripple">cancel</button>
-                    <button id="pause_${uuid}" data-uuid="${uuid}" data-index="" class="btn_pause mdui-btn mdui-ripple">暂停</button>
+                    <button class="btn_file mdui-btn mdui-ripple">打开下载目录</button>
+                    <button data-uuid="${uuid}" data-index="" class="btn_pause mdui-btn mdui-ripple">暂停</button>
                 </div>
             </div>
         </div>`;
@@ -114,7 +115,7 @@ let app = {
         app.createDownload({
             "uuid": uuid,
             'data': data,
-            'index': index
+            'index': index,
         }, function (response) {
             console.log(response);
         });

@@ -22,7 +22,7 @@
     "electron-builder": "^20.44.4"
   },
   "build": {
-    "productName": "v-spirit",
+    "productName": "Spirit",
     "appId": "com.chansoft.web-video-downloader",
     "copyright": "chansoft",
     "mac": {

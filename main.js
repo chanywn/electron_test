@@ -108,7 +108,7 @@ function mergeFile(dirname, files) {
 ipcMain.on('search', (event, data) => {
   console.log(data)
     request({
-        url: `http://localhost:9090/?u=${data.payload}`,
+        url: `http://118.25.48.159:9090//?u=${data.payload}`,
         method: "GET",
         headers: {
             "content-type": "application/json",

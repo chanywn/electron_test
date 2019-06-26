@@ -1,11 +1,42 @@
 {
-  "name": "your-app",
+  "name": "download-spirit",
+  "description": "web video download tool",
+  "author": "chansoft",
   "version": "0.1.0",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build-win": "electron-builder --win --x64",
+    "build-mac": "electron-builder --mac --x64",
+    "build": "electron-builder -mwl"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "async": "^3.1.0",
+    "events": "^3.0.0",
+    "node-downloader-helper": "^1.0.10",
+    "request": "^2.88.0"
   },
   "devDependencies": {
-    "electron": "^5.0.4"
+    "electron": "^5.0.4",
+    "electron-builder": "^20.44.4"
+  },
+  "build": {
+    "productName": "v-spirit",
+    "appId": "com.chansoft.web-video-downloader",
+    "copyright": "chansoft",
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "icon.ico"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ],
+      "icon": "icon.ico"
+    }
   }
 }

@@ -12,7 +12,7 @@
   },
   "license": "UNLICENSED",
   "dependencies": {
-    "async": "^3.1.0",
+    "async": "^3.2.2",
     "events": "^3.0.0",
     "node-downloader-helper": "^1.0.10",
     "request": "^2.88.0"
